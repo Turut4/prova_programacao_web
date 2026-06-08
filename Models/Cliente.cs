@@ -12,7 +12,7 @@ public class Cliente : ModelBase
 
     [StringLength(15, ErrorMessage = "A Inscrição Estadual deve ter no máximo 15 caracteres.")]
     [RegularExpression(@"^[0-9]+$", ErrorMessage = "O campo deve conter apenas números.")]
-    public string InscricaoEstadual { get; set; } = null!;
+    public string? InscricaoEstadual { get; set; }
 
     [Required(ErrorMessage = "O Nome é obrigatório.")]
     [StringLength(150, ErrorMessage = "O Nome não pode exceder {1} caracteres.")]
