@@ -101,7 +101,7 @@ public class ClienteController(IBanco<Cliente> banco) : Controller
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, model.CodigoFiscal)
+                new(ClaimTypes.Name, model.CodigoFiscal)
             };
 
             var identity = new ClaimsIdentity(
@@ -215,7 +215,7 @@ public class ClienteController(IBanco<Cliente> banco) : Controller
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, model.CodigoFiscal)
+                new(ClaimTypes.Name, model.CodigoFiscal)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
