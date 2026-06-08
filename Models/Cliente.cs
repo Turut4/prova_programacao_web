@@ -10,7 +10,6 @@ public class Cliente : ModelBase
     [RegularExpression(@"^[0-9]+$", ErrorMessage = "O campo deve conter apenas números.")]
     public string CodigoFiscal { get; set; } = null!;
 
-    [Required(ErrorMessage = "A Inscrição Estadual é obrigatória.")]
     [StringLength(15, ErrorMessage = "A Inscrição Estadual deve ter no máximo 15 caracteres.")]
     [RegularExpression(@"^[0-9]+$", ErrorMessage = "O campo deve conter apenas números.")]
     public string InscricaoEstadual { get; set; } = null!;
