@@ -78,7 +78,7 @@ public class ClienteController(IBanco<Cliente> banco) : Controller
 
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View("Cadastro", model);
         }
 
         if (model.Imagem != null && model.Imagem.Length > 0)
@@ -86,7 +86,7 @@ public class ClienteController(IBanco<Cliente> banco) : Controller
             if (!ValidarExtensaoImagem(model.Imagem))
             {
                 ModelState.AddModelError("Imagem", "Apenas imagens nos formatos .jpg, .jpeg, .png ou .gif são permitidas.");
-                return View(model);
+                return View("Cadastro", model);
             }
 
             model.ImagemCaminho = SalvarImagemNoServidor(model.Imagem);
