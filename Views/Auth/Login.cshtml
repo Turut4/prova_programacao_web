@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Entrar no Sistema";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="fw-bold mb-0">Acesso ao Sistema</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Erro != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <div class="small fw-medium">
+                                @ViewBag.Erro
+                            </div>
+                        </div>
+                    }
+
+                    <form asp-controller="Auth" asp-action="Login" method="post" autocomplete="off">
+                        <div class="mb-3">
+                            <label for="Login" class="form-label">CPF / CNPJ / Usuário</label>
+                            <input type="text" id="Login" name="Login" class="form-control" placeholder="Digite seu CPF/CNPJ ou Admin" required autofocus />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="Senha" class="form-label">Senha</label>
+                            <input type="password" id="Senha" name="Senha" class="form-control" placeholder="Digite sua senha" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            Entrar
+                        </button>
+
+                        <div class="text-center mt-3 pt-3 border-top">
+                            <span class="text-muted small">Não possui uma conta?</span>
+                            <a asp-controller="Cliente" asp-action="Cadastro" class="text-primary fw-bold text-decoration-none small ms-1">
+                                Cadastre-se
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    Acesso Administrador: Usuário <strong>Admin</strong> e Senha <strong>123</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

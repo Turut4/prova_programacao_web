@@ -1,0 +1,157 @@
+@model IEnumerable<Cliente>
+@{
+    ViewData["Title"] = "Painel de Controle";
+    var isAdmin = ViewBag.IsAdmin ?? false;
+    var totalClientes = Model?.Count() ?? 0;
+}
+
+<div class="container py-4">
+    @if (isAdmin)
+    {
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">Painel do Administrador</h2>
+            <a asp-controller="Cliente" asp-action="Cadastro" class="btn btn-primary">
+                Novo Cliente
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center" role="alert">
+                Nenhum cliente cadastrado até o momento.
+            </div>
+        }
+        else
+        {
+            <div class="card shadow-sm border-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light border-bottom">
+                            <tr>
+                                <th style="width: 80px;" class="ps-4">Foto</th>
+                                <th>Nome / Razão Social</th>
+                                <th>CPF / CNPJ</th>
+                                <th>Cidade - UF</th>
+                                <th style="width: 180px;" class="pe-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cliente in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        @if (!string.IsNullOrEmpty(cliente.ImagemCaminho))
+                                        {
+                                            <img src="@cliente.ImagemCaminho" alt="Avatar" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center border" style="width: 40px; height: 40px; font-weight: bold; font-size: 0.9rem;">
+                                                @cliente.Nome.Substring(0, Math.Min(cliente.Nome.Length, 2)).ToUpper()
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@cliente.Nome</div>
+                                        @if (!string.IsNullOrEmpty(cliente.NomeFantasia))
+                                        {
+                                            <small class="text-muted">@cliente.NomeFantasia</small>
+                                        }
+                                    </td>
+                                    <td>@cliente.CodigoFiscal</td>
+                                    <td>@cliente.Cidade - @cliente.Estado</td>
+                                    <td class="pe-4">
+                                        <div class="d-flex gap-2">
+                                            <a asp-controller="Cliente" asp-action="Editar" asp-route-id="@cliente.Id" class="btn btn-sm btn-outline-primary">
+                                                Editar
+                                            </a>
+                                            <form asp-controller="Cliente" asp-action="Excluir" asp-route-id="@cliente.Id" method="post" onsubmit="return confirm('Excluir este cliente permanentemente?');" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        var cliente = Model?.FirstOrDefault();
+        
+        <div class="row justify-content-center py-4">
+            <div class="col-md-6 col-lg-5">
+                @if (cliente == null)
+                {
+                    <div class="alert alert-warning text-center shadow-sm" role="alert">
+                        Seu cadastro não foi localizado no sistema.
+                    </div>
+                }
+                else
+                {
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center p-4">
+                            <!-- Avatar -->
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(cliente.ImagemCaminho))
+                                {
+                                    <img src="@cliente.ImagemCaminho" alt="Foto de Perfil" class="rounded-circle border" style="width: 110px; height: 110px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center border fw-bold mx-auto" style="width: 110px; height: 110px; font-size: 2.2rem;">
+                                        @cliente.Nome.Substring(0, Math.Min(cliente.Nome.Length, 2)).ToUpper()
+                                    </div>
+                                }
+                            </div>
+                            
+                            <h4 class="fw-bold mb-1">@cliente.Nome</h4>
+                            @if (!string.IsNullOrEmpty(cliente.NomeFantasia))
+                            {
+                                <p class="text-muted mb-2">@cliente.NomeFantasia</p>
+                            }
+                            <span class="badge bg-light text-primary border border-primary px-3 py-1 mb-4">Cliente</span>
+
+                            <!-- User Info List -->
+                            <ul class="list-group list-group-flush text-start mb-4">
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0 bg-transparent">
+                                    <span class="text-muted small">CPF / CNPJ</span>
+                                    <span class="fw-semibold text-end">@cliente.CodigoFiscal</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0 bg-transparent">
+                                    <span class="text-muted small">Nascimento</span>
+                                    <span class="text-end">@cliente.DataNascimento.ToString("dd/MM/yyyy")</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0 bg-transparent">
+                                    <span class="text-muted small">Cidade / UF</span>
+                                    <span class="text-end">@cliente.Cidade - @cliente.Estado</span>
+                                </li>
+                                <li class="list-group-item py-2 px-0 bg-transparent">
+                                    <div class="text-muted small mb-1">Endereço</div>
+                                    <span class="text-break">@cliente.Endereco, @cliente.Numero - @cliente.Bairro</span>
+                                </li>
+                            </ul>
+
+                            <!-- Actions -->
+                            <div class="d-grid gap-2 pt-2">
+                                <a asp-controller="Cliente" asp-action="Editar" asp-route-id="@cliente.Id" class="btn btn-primary">
+                                    Editar Perfil
+                                </a>
+                                <form asp-controller="Cliente" asp-action="Excluir" asp-route-id="@cliente.Id" method="post" onsubmit="return confirm('Tem certeza absoluta de que deseja excluir permanentemente sua conta?');" class="d-grid">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        Excluir Conta
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

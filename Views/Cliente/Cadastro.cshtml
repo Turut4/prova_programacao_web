@@ -1,0 +1,264 @@
+@model Cliente
+@{
+    var isEdit = Model != null && Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Editar Cliente" : "Cadastrar Cliente";
+}
+
+<div class="container py-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="card-title mb-0">
+                        @(isEdit ? "Editar Cadastro de Cliente" : "Novo Cadastro de Cliente")
+                    </h5>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name == "Admin")
+                    {
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            Voltar para a Lista
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-light btn-sm">
+                            Voltar para o Início
+                        </a>
+                    }
+                </div>
+                <div class="card-body">
+                    <form asp-action="@(isEdit ? "Editar" : "Cadastrar")" method="post" enctype="multipart/form-data">
+                        @if (isEdit)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="ImagemCaminho" />
+                        }
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Nome" class="form-label">Nome *</label>
+                                <input asp-for="Nome" class="form-control" placeholder="Nome Completo ou Razão Social" />
+                                <span asp-validation-for="Nome" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="DataNascimento" class="form-label">Data Nasc. / Abertura *</label>
+                                <input asp-for="DataNascimento" type="date" class="form-control" />
+                                <span asp-validation-for="DataNascimento" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="NomeFantasia" class="form-label">Nome Fantasia</label>
+                                <input asp-for="NomeFantasia" class="form-control" placeholder="Nome Fantasia (se aplicável)" />
+                                <span asp-validation-for="NomeFantasia" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CodigoFiscal" class="form-label">CPF / CNPJ *</label>
+                                <input asp-for="CodigoFiscal" class="form-control" placeholder="Apenas números" maxlength="14" />
+                                <span asp-validation-for="CodigoFiscal" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="InscricaoEstadual" class="form-label">Inscrição Estadual</label>
+                                <input asp-for="InscricaoEstadual" class="form-control" placeholder="Inscrição Estadual" maxlength="15" />
+                                <span asp-validation-for="InscricaoEstadual" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 border-top my-3 pt-3">
+                                <h6 class="text-primary mb-3">Segurança de Acesso</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @if (isEdit)
+                                        {
+                                            <label for="NovaSenha" class="form-label">Nova Senha</label>
+                                            <input type="password" id="NovaSenha" name="NovaSenha" class="form-control" placeholder="Deixe em branco para manter a mesma" />
+                                        }
+                                        else
+                                        {
+                                            <label asp-for="Senha" class="form-label">Senha *</label>
+                                            <input asp-for="Senha" type="password" class="form-control" placeholder="Digite uma senha" required />
+                                            <span asp-validation-for="Senha" class="text-danger small"></span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <label asp-for="Endereco" class="form-label">Endereço *</label>
+                                <input asp-for="Endereco" class="form-control" placeholder="Rua, Avenida, etc." />
+                                <span asp-validation-for="Endereco" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label asp-for="Numero" class="form-label">Número *</label>
+                                <input asp-for="Numero" class="form-control" placeholder="Nº" />
+                                <span asp-validation-for="Numero" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label asp-for="Bairro" class="form-label">Bairro *</label>
+                                <input asp-for="Bairro" class="form-control" placeholder="Bairro" />
+                                <span asp-validation-for="Bairro" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label asp-for="Estado" class="form-label">Estado *</label>
+                                <select asp-for="Estado" class="form-select" required>
+                                    <option value="">Selecione...</option>
+                                </select>
+                                <span asp-validation-for="Estado" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Cidade" class="form-label">Cidade *</label>
+                                <select asp-for="Cidade" class="form-select" required disabled>
+                                    <option value="">Selecione o Estado primeiro...</option>
+                                </select>
+                                <span asp-validation-for="Cidade" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 border-top my-4 pt-3">
+                                <h6 class="text-primary mb-3">Foto ou Logotipo</h6>
+                                <div class="row align-items-center">
+                                    <div class="@(isEdit && !string.IsNullOrEmpty(Model?.ImagemCaminho) ? "col-md-9" : "col-12")">
+                                        <label asp-for="Imagem" class="form-label">Foto / Logo</label>
+                                        <input asp-for="Imagem" type="file" class="form-control" accept="image/*" />
+                                        <span asp-validation-for="Imagem" class="text-danger small"></span>
+                                    </div>
+                                    @if (isEdit && !string.IsNullOrEmpty(Model?.ImagemCaminho))
+                                    {
+                                        <div class="col-md-3 text-center">
+                                            <div class="p-2 border rounded bg-white">
+                                                <small class="d-block text-muted mb-1">Atual:</small>
+                                                <img src="@Model?.ImagemCaminho" alt="Foto do Cliente" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;" />
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-info me-auto" onclick="exportarJson()">
+                                Exportar JSON
+                            </button>
+                            @if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name == "Admin")
+                            {
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    Cancelar
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                                    Cancelar
+                                </a>
+                            }
+                            <button type="submit" class="btn btn-primary">
+                                @(isEdit ? "Salvar Alterações" : "Salvar Cadastro")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const estadoSelect = document.getElementById("Estado");
+            const cidadeSelect = document.getElementById("Cidade");
+            
+            const valorEstadoOriginal = "@Html.Raw(Model?.Estado ?? "")";
+            const valorCidadeOriginal = "@Html.Raw(Model?.Cidade ?? "")";
+
+            let dadosMunicipios = {};
+
+            try {
+                const response = await fetch("/dados/municipios.json");
+                dadosMunicipios = await response.json();
+
+                const estadosOrdenados = Object.keys(dadosMunicipios).sort((a, b) => a.localeCompare(b));
+                
+                estadosOrdenados.forEach(estado => {
+                    const opt = document.createElement("option");
+                    opt.value = estado;
+                    opt.textContent = estado;
+                    estadoSelect.appendChild(opt);
+                });
+
+                if (valorEstadoOriginal) {
+                    estadoSelect.value = valorEstadoOriginal;
+                }
+
+                estadoSelect.addEventListener("change", function() {
+                    atualizarCidades(estadoSelect.value);
+                });
+
+                if (valorEstadoOriginal) {
+                    atualizarCidades(valorEstadoOriginal, valorCidadeOriginal);
+                }
+
+            } catch (error) {
+                console.error("Erro ao carregar dados de municípios:", error);
+            }
+
+            function atualizarCidades(nomeEstado, valorSelecionado = "") {
+                cidadeSelect.innerHTML = "";
+                
+                if (!nomeEstado) {
+                    cidadeSelect.innerHTML = '<option value="">Selecione o Estado primeiro...</option>';
+                    cidadeSelect.disabled = true;
+                    return;
+                }
+
+                const cidadesDoEstado = dadosMunicipios[nomeEstado] || [];
+
+                cidadeSelect.disabled = false;
+                const optDefault = document.createElement("option");
+                optDefault.value = "";
+                optDefault.textContent = "Selecione a cidade...";
+                cidadeSelect.appendChild(optDefault);
+
+                const cidadesOrdenadas = [...cidadesDoEstado].sort((a, b) => a.localeCompare(b));
+                cidadesOrdenadas.forEach(cidade => {
+                    const opt = document.createElement("option");
+                    opt.value = cidade;
+                    opt.textContent = cidade;
+                    cidadeSelect.appendChild(opt);
+                });
+
+                if (valorSelecionado) {
+                    cidadeSelect.value = valorSelecionado;
+                }
+            }
+
+            window.exportarJson = function() {
+                const dados = {
+                    Nome: document.getElementById("Nome")?.value || "",
+                    NomeFantasia: document.getElementById("NomeFantasia")?.value || "",
+                    DataNascimento: document.getElementById("DataNascimento")?.value || "",
+                    CodigoFiscal: document.getElementById("CodigoFiscal")?.value || "",
+                    InscricaoEstadual: document.getElementById("InscricaoEstadual")?.value || "",
+                    Endereco: document.getElementById("Endereco")?.value || "",
+                    Numero: document.getElementById("Numero")?.value || "",
+                    Bairro: document.getElementById("Bairro")?.value || "",
+                    Cidade: document.getElementById("Cidade")?.value || "",
+                    Estado: document.getElementById("Estado")?.value || ""
+                };
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dados, null, 4));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `cadastro_${dados.CodigoFiscal || 'cliente'}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            };
+        });
+    </script>
+}
