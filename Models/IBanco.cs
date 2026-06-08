@@ -7,5 +7,4 @@ public interface IBanco<TModel>
     void Excluir(int id);
     List<TModel> Listar();
     TModel? Busca(int id);
-
 }
