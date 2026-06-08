@@ -18,9 +18,8 @@ public class Cliente : ModelBase
     [StringLength(150, ErrorMessage = "O Nome não pode exceder {1} caracteres.")]
     public string Nome { get; set; } = null!;
 
-    [Required(ErrorMessage = "O Nome Fantasia é obrigatório.")]
     [StringLength(150, ErrorMessage = "O Nome Fantasia não pode exceder {1} caracteres.")]
-    public string NomeFantasia { get; set; } = null!;
+    public string? NomeFantasia { get; set; }
 
     [Required(ErrorMessage = "O Endereço é obrigatório.")]
     public string Endereco { get; set; } = null!;

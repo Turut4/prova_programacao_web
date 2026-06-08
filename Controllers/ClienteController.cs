@@ -60,10 +60,6 @@ public class ClienteController(IBanco<Cliente> banco) : Controller
             }
         }
 
-        if (model.Imagem == null || model.Imagem.Length == 0)
-        {
-            ModelState.AddModelError("Imagem", "A imagem (foto ou logo) é obrigatória.");
-        }
 
         if (!string.IsNullOrEmpty(model.Senha))
         {
